@@ -1,12 +1,12 @@
 import 'package:movies/core/network/dto/movie_dto.dart';
-import 'package:movies/features/movies/domain/movie.dart';
+import 'package:movies/features/movies/domain/models/movie.dart';
 
 class MovieMapper {
   Movie fromDto(MovieDto dto) {
     return Movie(
       id: dto.id ?? 0,
       title: dto.title ?? 'title',
-      posterPath: dto.posterPath ?? '',
+      posterPath: dto.posterPath != null ? 'https://image.tmdb.org/t/p/w500${dto.posterPath}' : '',
       voteAverage: dto.voteAverage ?? 0.0,
     );
   }
