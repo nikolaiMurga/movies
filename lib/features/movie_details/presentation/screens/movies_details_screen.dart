@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movies/features/movie_details/presentation/providers/movie_details_provider.dart';
+import 'package:movies/resources/app_strings.dart';
 
 class MovieDetailsScreen extends ConsumerWidget {
   final int movieId;
@@ -13,10 +14,7 @@ class MovieDetailsScreen extends ConsumerWidget {
     final movieDetails = ref.watch(movieDetailsProvider(movieId));
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: () => context.pop(), icon: const Icon(Icons.arrow_back)),
-        title: const Text('Movie Details'),
-      ),
+      appBar: AppBar(title: const Text(AppStrings.movieDetails)),
       body: movieDetails.when(
         data: (details) => SingleChildScrollView(
           child: Padding(

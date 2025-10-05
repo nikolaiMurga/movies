@@ -1,5 +1,10 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movies/features/movie_details/data/repos/movie_details_network_repo.dart';
 import 'package:movies/features/movie_details/domain/models/movie_details.dart';
+
+final moviesDetailsUseCase = Provider<MoviesDetailsUseCase>((ref) {
+  return MoviesDetailsUseCase(ref.watch(movieDetailsNetworkRepo));
+});
 
 class MoviesDetailsUseCase {
   final MovieDetailsNetworkRepo _networkRepo;

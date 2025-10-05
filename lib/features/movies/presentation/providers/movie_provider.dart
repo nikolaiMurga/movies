@@ -6,16 +6,13 @@ import 'package:movies/features/movies/domain/use_cases/movies_use_case.dart';
 import 'package:movies/resources/app_strings.dart';
 
 final movieProvider = AsyncNotifierProvider<MovieProvider, List<Movie>>(() {
-  throw UnimplementedError('Must provide MoviesUseCase via constructor');
+  return MovieProvider();
 });
 
 class MovieProvider extends AsyncNotifier<List<Movie>> {
-  final MoviesUseCase _moviesUseCase;
   int _currentPage = 1;
   int _totalPages = 1;
   bool _hasMore = true;
-
-  MovieProvider(this._moviesUseCase);
 
   @override
   Future<List<Movie>> build() async {
@@ -36,7 +33,8 @@ class MovieProvider extends AsyncNotifier<List<Movie>> {
 
     try {
       final request = MoviesRequest(page: page);
-      final paginatedMovies = await _moviesUseCase.fetchMovies(request: request);
+      final movieUseCase = ref.watch(moviesUseCase);
+      final paginatedMovies = await movieUseCase.fetchMovies(request: request);
       final currentMovies = state.value ?? [];
 
       _currentPage = paginatedMovies.page;

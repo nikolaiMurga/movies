@@ -1,6 +1,9 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movies/common/mixins/date_format_mixin.dart';
 import 'package:movies/core/network/dto/movie_details_dto.dart';
 import 'package:movies/features/movie_details/domain/models/movie_details.dart';
+
+final movieDetailsMapper = Provider<MovieDetailsMapper>((ref) => MovieDetailsMapper());
 
 class MovieDetailsMapper with DateFormatMixin {
   MovieDetails fromDto(MovieDetailsDto dto) {

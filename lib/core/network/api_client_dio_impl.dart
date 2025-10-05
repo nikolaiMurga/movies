@@ -1,18 +1,35 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movies/common/models/error_model.dart';
 import 'package:movies/core/network/api_client.dart';
+import 'package:movies/core/network/endpoints.dart';
+import 'package:movies/core/network/params.dart';
+import 'package:movies/resources/app_constants.dart';
 import 'package:movies/resources/app_strings.dart';
 
+final baseOptions = Provider<BaseOptions>((ref) {
+  return BaseOptions(
+    baseUrl: Endpoints.baseUrl,
+    headers: ref.watch(params).getHeaders(token: dotenv.env[AppStrings.apiToken]),
+    connectTimeout: AppConstants.connectTimeout,
+    receiveTimeout: AppConstants.receiveTimeout,
+    sendTimeout: AppConstants.sendTimeout,
+  );
+});
 
-// final dioProvider = Provider<ApiClient>((ref) {
-//   return ApiClientDioImpl(_dio);
-// });
+final dioProvider = Provider<Dio>((ref) {
+  return Dio(ref.watch(baseOptions));
+});
+
+final apiClient = Provider<ApiClient>((ref) {
+  return ApiClientDioImpl(ref.watch(dioProvider));
+});
 
 class ApiClientDioImpl implements ApiClient {
-  final Dio _dio;
+  final Dio dio;
 
-  ApiClientDioImpl(this._dio);
+  const ApiClientDioImpl(this.dio);
 
   ErrorModel _mapDioException(DioException e) {
     ErrorModel badResponseHandle() {
@@ -75,6 +92,6 @@ class ApiClientDioImpl implements ApiClient {
   // GET
   @override
   Future<Response> get({required String endpoint, Map<String, dynamic>? queryParams}) async {
-    return _dioExceptionHandle(apiCall: _dio.get(endpoint, queryParameters: queryParams));
+    return _dioExceptionHandle(apiCall: dio.get(endpoint, queryParameters: queryParams));
   }
 }

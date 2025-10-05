@@ -1,5 +1,8 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movies/core/network/dto/movie_dto.dart';
 import 'package:movies/features/movies/domain/models/movie.dart';
+
+final movieMapper = Provider<MovieMapper>((ref) => MovieMapper());
 
 class MovieMapper {
   Movie fromDto(MovieDto dto) {

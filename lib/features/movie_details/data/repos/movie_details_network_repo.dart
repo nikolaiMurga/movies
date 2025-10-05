@@ -1,8 +1,14 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movies/core/mappers/movie_details_mapper.dart';
 import 'package:movies/core/network/api_client.dart';
+import 'package:movies/core/network/api_client_dio_impl.dart';
 import 'package:movies/core/network/dto/movie_details_dto.dart';
 import 'package:movies/core/network/endpoints.dart';
 import 'package:movies/features/movie_details/domain/models/movie_details.dart';
+
+final movieDetailsNetworkRepo = Provider<MovieDetailsNetworkRepo>((ref) {
+  return MovieDetailsNetworkRepo(ref.watch(apiClient), ref.watch(movieDetailsMapper));
+});
 
 class MovieDetailsNetworkRepo {
   final ApiClient _apiClient;
