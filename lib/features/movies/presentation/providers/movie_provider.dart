@@ -23,10 +23,10 @@ class MovieProvider extends AsyncNotifier<List<Movie>> {
     _currentPage = 1;
     _totalPages = 1;
     _hasMore = true;
-    state = const AsyncValue.data([]);
+    state.value?.clear();
   }
 
-  Future<void> fetchMovies(String query, {int page = 1}) async {
+  Future<void> fetchMovies({required int page}) async {
     if (page > 1 && !_hasMore) return;
 
     if (page == 1) state = const AsyncValue.loading();
@@ -42,6 +42,18 @@ class MovieProvider extends AsyncNotifier<List<Movie>> {
       _hasMore = _currentPage < _totalPages;
 
       state = AsyncValue.data([...currentMovies, ...paginatedMovies.moviesList]);
+    } on ErrorModel catch (e, stackTrace) {
+      state = AsyncValue.error(e.statusMessage ?? AppStrings.noErrorMessage, stackTrace);
+    }
+  }
+
+  Future<void> fetchMoviesBySearch({required String query}) async {
+    reset();
+    state = const AsyncValue.loading();
+    try {
+      final movieUseCase = ref.watch(moviesUseCase);
+      final moviesBySearch = await movieUseCase.fetchMoviesBySearch(query: query);
+      state = AsyncValue.data(moviesBySearch);
     } on ErrorModel catch (e, stackTrace) {
       state = AsyncValue.error(e.statusMessage ?? AppStrings.noErrorMessage, stackTrace);
     }

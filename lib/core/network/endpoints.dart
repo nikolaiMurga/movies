@@ -4,4 +4,5 @@ class Endpoints {
   // movies
   static const topRatedMovies = 'movie/top_rated';
   static const movieDetails = 'movie/';
+  static const searchMovie = 'search/movie';
 }
