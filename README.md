@@ -2,15 +2,15 @@
 
 Test task demo project
 
-## Getting Started
+REST API https://developer.themoviedb.org/docs/getting-started
 
-This project is a starting point for a Flutter application.
+To run the project, you should:
 
-A few resources to get you started if this is your first Flutter project:
+register on the resource by link REST API.
+get an Api Key.
+create a file .env in root of your project.
+put your Api Key to this file by key API_TOKEN=
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Uploading FILE 2025-10-05 21:08:53.mp4…
+
