@@ -10,7 +10,7 @@ class MoviesUseCase {
 
   MoviesUseCase(this._networkRepo, this._localRepo);
 
-  Future<PaginatedMovies> fetchCurrencies({required MoviesRequest request}) async {
+  Future<PaginatedMovies> fetchMovies({required MoviesRequest request}) async {
     return _networkRepo.fetchPaginatedMovies(request: request);
   }
 

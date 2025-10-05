@@ -1,7 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movies/common/models/error_model.dart';
 import 'package:movies/core/network/api_client.dart';
 import 'package:movies/resources/app_strings.dart';
+
+
+// final dioProvider = Provider<ApiClient>((ref) {
+//   return ApiClientDioImpl(_dio);
+// });
 
 class ApiClientDioImpl implements ApiClient {
   final Dio _dio;
