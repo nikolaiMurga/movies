@@ -19,6 +19,10 @@ class MoviesUseCase {
     return _networkRepo.fetchPaginatedMovies(request: request);
   }
 
+  Future<List<Movie>> fetchMoviesBySearch({required String query}) async {
+    return _networkRepo.fetchPaginatedMoviesBySearch(query: query);
+  }
+
   // Future<bool> saveFavoriteMovies({required List<Movie> list}) async {
   //   return _localRepo.saveFavoriteMovies(list: list);
   // }

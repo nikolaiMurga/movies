@@ -23,10 +23,13 @@ class Params {
     }
   }
 
-  Map<String, dynamic> getMoviesRequestQueryParams({required MoviesRequest request}) {
-    final Map<String, String> queryParams = {
-      'page': '${request.page}',
-    };
+  Map<String, dynamic> getMoviesQueryParams({required MoviesRequest request}) {
+    final Map<String, String> queryParams = {'page': '${request.page}'};
+    return queryParams;
+  }
+
+  Map<String, dynamic> getMovieQueryParamsBySearch({required String query}) {
+    final Map<String, String> queryParams = {'query': query};
     return queryParams;
   }
 }

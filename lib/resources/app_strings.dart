@@ -25,6 +25,7 @@ class AppStrings {
   static const ok = 'ОК';
   static const movies = 'Movies';
   static const moviesNotFound = 'No movies found';
+  static const search = 'Search...';
 
   // movie details
   static const movieDetails = 'Movie Details';

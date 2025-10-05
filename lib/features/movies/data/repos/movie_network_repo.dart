@@ -22,7 +22,7 @@ class MovieNetworkRepo {
   MovieNetworkRepo(this._apiClient, this._movieMapper, this._params);
 
   Future<PaginatedMovies> fetchPaginatedMovies({required MoviesRequest request}) async {
-    final queryParams = _params.getMoviesRequestQueryParams(request: request);
+    final queryParams = _params.getMoviesQueryParams(request: request);
     final resp = await _apiClient.get(endpoint: Endpoints.topRatedMovies, queryParams: queryParams);
     final movResp = MoviesResponse.fromJson(resp.data);
     final dtoList = movResp.dtoList;
@@ -33,5 +33,19 @@ class MovieNetworkRepo {
       }
     }
     return PaginatedMovies(page: movResp.page, moviesList: moviesList, totalPages: movResp.totalPages);
+  }
+
+  Future<List<Movie>> fetchPaginatedMoviesBySearch({required String query}) async {
+    final queryParams = _params.getMovieQueryParamsBySearch(query: query);
+    final resp = await _apiClient.get(endpoint: Endpoints.searchMovie, queryParams: queryParams);
+    final movResp = MoviesResponse.fromJson(resp.data);
+    final dtoList = movResp.dtoList;
+    final moviesList = <Movie>[];
+    if (dtoList.isNotEmpty) {
+      for (MovieDto dto in dtoList) {
+        moviesList.add(_movieMapper.fromDto(dto));
+      }
+    }
+    return moviesList;
   }
 }

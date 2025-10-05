@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movies/common/mixins/snack_bar_mixin.dart';
@@ -15,32 +17,19 @@ class MovieScreen extends ConsumerStatefulWidget {
 
 class MovieScreenState extends ConsumerState<MovieScreen> with SnackBarMixin {
   final ScrollController _scrollController = ScrollController();
-  final String _query = 'star wars';
   int _currentPage = 1;
+  final _debounce = Debounce();
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+  bool _isSearching = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(movieProvider.notifier).fetchMovies(_query, page: _currentPage);
+      ref.read(movieProvider.notifier).fetchMovies(page: _currentPage);
     });
     _scrollController.addListener(fetchPage);
-  }
-
-  void fetchPage() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-      final state = ref.read(movieProvider);
-      if (!state.isLoading && state.value != null) {
-        _currentPage++;
-        ref.read(movieProvider.notifier).fetchMovies(_query, page: _currentPage);
-      }
-    }
-  }
-
-  void _reloadList() {
-    _currentPage = 1;
-    ref.read(movieProvider.notifier).reset();
-    ref.read(movieProvider.notifier).fetchMovies(_query, page: _currentPage);
   }
 
   @override
@@ -49,12 +38,69 @@ class MovieScreenState extends ConsumerState<MovieScreen> with SnackBarMixin {
     super.dispose();
   }
 
+  void fetchPage() {
+    if (_isSearching) return;
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      final state = ref.read(movieProvider);
+      if (!state.isLoading && state.value != null) {
+        _currentPage++;
+        ref.read(movieProvider.notifier).fetchMovies(page: _currentPage);
+      }
+    }
+  }
+
+  void _reloadList() {
+    _currentPage = 1;
+    ref.read(movieProvider.notifier).reset();
+    ref.read(movieProvider.notifier).fetchMovies(page: _currentPage);
+  }
+
+  void _onSearchChanged(String query) {
+    if (query.length < 3) return;
+    _debounce.run(action: () {
+      _searchFocusNode.unfocus();
+      ref.read(movieProvider.notifier).fetchMoviesBySearch(query: query);
+    });
+  }
+
+  void _toggleSearch() {
+    setState(() => _isSearching = !_isSearching);
+    if (_isSearching) {
+      _searchFocusNode.requestFocus();
+    } else {
+      _searchFocusNode.unfocus();
+      _searchController.clear();
+      _currentPage = 1;
+      ref.read(movieProvider.notifier).reset();
+      ref.read(movieProvider.notifier).fetchMovies(page: _currentPage);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final movieState = ref.watch(movieProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.movies)),
+      appBar: AppBar(
+        title: _isSearching
+            ? Padding(
+                key: const ValueKey('search_field'),
+                padding: const EdgeInsets.only(right: 8.0),
+                child: TextFormField(
+                  controller: _searchController,
+                  focusNode: _searchFocusNode,
+                  decoration: const InputDecoration(hintText: AppStrings.search, border: InputBorder.none),
+                  onChanged: (value) => _onSearchChanged(value),
+                ),
+              )
+            : const Text(key: ValueKey('title'), AppStrings.movies),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
+            onPressed: _toggleSearch,
+          ),
+        ],
+      ),
       body: movieState.when(
         data: (movies) {
           if (movies.isEmpty && !movieState.isLoading) {
@@ -92,5 +138,16 @@ class MovieScreenState extends ConsumerState<MovieScreen> with SnackBarMixin {
         },
       ),
     );
+  }
+}
+
+class Debounce {
+  int? milliseconds;
+  VoidCallback? action;
+  Timer? timer;
+
+  run({required VoidCallback action}) {
+    if (timer != null) timer!.cancel();
+    timer = Timer(const Duration(seconds: 1), action);
   }
 }
