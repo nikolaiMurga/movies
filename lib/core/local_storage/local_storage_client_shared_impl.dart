@@ -1,6 +1,11 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movies/common/logging_service.dart';
 import 'package:movies/core/local_storage/local_storage_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+final localStorage = Provider<LocalStorageClient>((ref) {
+  return LocalStorageClientSharedImpl(SharedPreferences.getInstance() as SharedPreferences);
+});
 
 class LocalStorageClientSharedImpl implements LocalStorageClient {
   final SharedPreferences _pref;
@@ -17,17 +22,17 @@ class LocalStorageClientSharedImpl implements LocalStorageClient {
   final _favoriteMoviesKey = 'favorite_movies_key';
 
   @override
-  Future<bool> saveFavoriteMovies(String jsonString) async {
-    final isSet = await _pref.setString(_favoriteMoviesKey, jsonString);
+  Future<bool> saveFavoriteMovies(List<String> jsonString) async {
+    final isSet = await _pref.setStringList(_favoriteMoviesKey, jsonString);
     LogService.addLog('saveFavoriteMovies succeed is $isSet');
     return isSet;
   }
 
   @override
-  Future<String?> loadFavoriteMovies() async {
-    final jsonString = _pref.getString(_favoriteMoviesKey);
-    LogService.addLog('saveFavoriteMovies succeed is $jsonString');
-    return jsonString;
+  List<String> loadFavoriteMovies() {
+    final stringList = _pref.getStringList(_favoriteMoviesKey);
+    LogService.addLog('saveFavoriteMovies succeed is $stringList');
+    return stringList ?? [];
   }
 
   @override
