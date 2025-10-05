@@ -39,13 +39,11 @@ class MovieProvider extends AsyncNotifier<List<Movie>> {
 
       _currentPage = paginatedMovies.page;
       _totalPages = paginatedMovies.totalPages;
-      _hasMore = _currentPage < 3;
+      _hasMore = _currentPage < _totalPages;
 
       state = AsyncValue.data([...currentMovies, ...paginatedMovies.moviesList]);
     } catch (e, stackTrace) {
       state = AsyncValue.error('Error: $e', stackTrace);
     }
   }
-
-
 }
