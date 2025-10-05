@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movies/common/mixins/snack_bar_mixin.dart';
 import 'package:movies/features/movies/presentation/providers/movie_provider.dart';
 import 'package:movies/features/movies/presentation/widgets/empty_state_widget.dart';
 import 'package:movies/features/movies/presentation/widgets/movie_grid_item.dart';
@@ -12,7 +13,7 @@ class MovieScreen extends ConsumerStatefulWidget {
   MovieScreenState createState() => MovieScreenState();
 }
 
-class MovieScreenState extends ConsumerState<MovieScreen> {
+class MovieScreenState extends ConsumerState<MovieScreen> with SnackBarMixin {
   final ScrollController _scrollController = ScrollController();
   final String _query = 'star wars';
   int _currentPage = 1;
@@ -23,15 +24,13 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(movieProvider.notifier).fetchMovies(_query, page: _currentPage);
     });
-
     _scrollController.addListener(fetchPage);
   }
 
   void fetchPage() {
-    final endOfPage = _scrollController.position.pixels == _scrollController.position.maxScrollExtent;
-    if (endOfPage) {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
       final state = ref.read(movieProvider);
-      if (state.value != null && !state.value!.isLoading && state.value!.hasMore) {
+      if (!state.isLoading && state.value != null) {
         _currentPage++;
         ref.read(movieProvider.notifier).fetchMovies(_query, page: _currentPage);
       }
@@ -57,45 +56,40 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.movies)),
       body: movieState.when(
-        data: (state) {
-          if (state.isLoading && state.movies == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state.error != null) {
-            return Center(child: Text(state.error!.error!, style: const TextStyle(color: Colors.red)));
-          }
-          if (state.movies != null && state.movies!.isEmpty) {
+        data: (movies) {
+          if (movies.isEmpty && !movieState.isLoading) {
             return RefreshIndicator(
               onRefresh: () async => _reloadList(),
               child: ListView(children: const [EmptyStateWidget()]),
             );
           }
-          if (state.movies != null && state.movies!.isNotEmpty) {
-            return RefreshIndicator(
-              onRefresh: () async => _reloadList(),
-              child: GridView.builder(
-                controller: _scrollController,
-                padding: const EdgeInsets.all(8.0),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 8.0,
-                  mainAxisSpacing: 8.0,
-                  childAspectRatio: 0.58,
-                ),
-                itemCount: state.movies!.length + (state.hasMore ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index == state.movies!.length && state.hasMore) {
-                    return const SizedBox.shrink();
-                  }
-                  final movie = state.movies![index];
-                  return MovieGridItem(movie: movie);
-                },
+          return RefreshIndicator(
+            onRefresh: () async => _reloadList(),
+            child: GridView.builder(
+              controller: _scrollController,
+              padding: const EdgeInsets.all(8.0),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 8.0,
+                mainAxisSpacing: 8.0,
+                childAspectRatio: 0.58,
               ),
-            );
-          }
+              itemCount: movies.length,
+              itemBuilder: (context, index) {
+                final movie = movies[index];
+                return MovieGridItem(movie: movie);
+              },
+            ),
+          );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),
+        error: (err, stack) {
+          WidgetsBinding.instance.addPostFrameCallback((_) => showSnackBar(context, err.toString()));
+          return RefreshIndicator(
+            onRefresh: () async => _reloadList(),
+            child: ListView(children: const [EmptyStateWidget()]),
+          );
+        },
       ),
     );
   }

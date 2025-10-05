@@ -1,15 +1,13 @@
 class ErrorModel {
-  String? error;
+  int? statusCode;
+  String? statusMessage;
+  bool? success;
 
-  ErrorModel({this.error});
+  ErrorModel({this.statusCode, this.statusMessage, this.success});
 
   ErrorModel.fromJson(Map<String, dynamic> json) {
-    error = json['error'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['error'] = error;
-    return data;
+    statusCode = json['status_code'];
+    statusMessage = json['status_message'];
+    success = json['success'];
   }
 }
