@@ -68,8 +68,7 @@ class ApiClientDioImpl implements ApiClient {
 
   // GET
   @override
-  Future<dynamic> get({required String endpoint, required Map<String, dynamic> queryParams}) async {
-    final resp = await _dioExceptionHandle(apiCall: _dio.get(endpoint, queryParameters: queryParams));
-    return resp.data;
+  Future<Response> get({required String endpoint, Map<String, dynamic>? queryParams}) async {
+    return _dioExceptionHandle(apiCall: _dio.get(endpoint, queryParameters: queryParams));
   }
 }
