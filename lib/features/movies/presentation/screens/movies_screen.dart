@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movies/common/mixins/snack_bar_mixin.dart';
+import 'package:movies/core/theme/theme_provider.dart';
 import 'package:movies/features/movies/presentation/providers/movie_provider.dart';
 import 'package:movies/features/movies/presentation/widgets/empty_state_widget.dart';
 import 'package:movies/features/movies/presentation/widgets/movie_grid_item.dart';
@@ -79,6 +80,7 @@ class MovieScreenState extends ConsumerState<MovieScreen> with SnackBarMixin {
   @override
   Widget build(BuildContext context) {
     final movieState = ref.watch(movieProvider);
+    final themeMode = ref.watch(themeProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -98,6 +100,12 @@ class MovieScreenState extends ConsumerState<MovieScreen> with SnackBarMixin {
           IconButton(
             icon: Icon(_isSearching ? Icons.close : Icons.search),
             onPressed: _toggleSearch,
+          ),
+          IconButton(
+            icon: Icon(themeMode == ThemeMode.light ? Icons.dark_mode_outlined : Icons.light_mode_outlined),
+            onPressed: () {
+              ref.read(themeProvider.notifier).setTheme(themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light);
+            },
           ),
         ],
       ),
