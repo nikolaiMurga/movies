@@ -1,12 +1,12 @@
 import 'package:movies/core/network/requests/currencies_request.dart';
-import 'package:movies/features/movies/data/repos/local_repo.dart';
-import 'package:movies/features/movies/data/repos/network_repo.dart';
+import 'package:movies/features/movies/data/repos/movie_local_repo.dart';
+import 'package:movies/features/movies/data/repos/movie_network_repo.dart';
 import 'package:movies/features/movies/domain/models/movie.dart';
 import 'package:movies/features/movies/domain/models/paginated_movies.dart';
 
 class MoviesUseCase {
-  final NetworkRepo _networkRepo;
-  final LocalRepo _localRepo;
+  final MovieNetworkRepo _networkRepo;
+  final MovieLocalRepo _localRepo;
 
   MoviesUseCase(this._networkRepo, this._localRepo);
 

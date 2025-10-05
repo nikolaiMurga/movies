@@ -10,8 +10,8 @@ import 'package:movies/core/network/api_client_dio_impl.dart';
 import 'package:movies/core/network/endpoints.dart';
 import 'package:movies/core/network/params.dart';
 import 'package:movies/core/router/router.dart';
-import 'package:movies/features/movies/data/repos/local_repo.dart';
-import 'package:movies/features/movies/data/repos/network_repo.dart';
+import 'package:movies/features/movies/data/repos/movie_local_repo.dart';
+import 'package:movies/features/movies/data/repos/movie_network_repo.dart';
 import 'package:movies/features/movies/domain/use_cases/movies_use_case.dart';
 import 'package:movies/features/movies/presentation/providers/movie_provider.dart';
 import 'package:movies/resources/app_constants.dart';
@@ -42,8 +42,8 @@ void main() async {
   final MovieMapper movieMapper = MovieMapper();
 
   // REPOS
-  final networkRepo = NetworkRepo(apiClient, movieMapper, params);
-  final LocalRepo localRepo = LocalRepo(localStorageClient, movieMapper);
+  final networkRepo = MovieNetworkRepo(apiClient, movieMapper, params);
+  final MovieLocalRepo localRepo = MovieLocalRepo(localStorageClient, movieMapper);
 
   final MoviesUseCase moviesUseCase = MoviesUseCase(networkRepo, localRepo);
 

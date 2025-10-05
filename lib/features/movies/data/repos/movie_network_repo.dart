@@ -8,12 +8,12 @@ import 'package:movies/core/network/responses/movie_response.dart';
 import 'package:movies/features/movies/domain/models/movie.dart';
 import 'package:movies/features/movies/domain/models/paginated_movies.dart';
 
-class NetworkRepo {
+class MovieNetworkRepo {
   final ApiClient _apiClient;
   final MovieMapper _movieMapper;
   final Params _params;
 
-  NetworkRepo(this._apiClient, this._movieMapper, this._params);
+  MovieNetworkRepo(this._apiClient, this._movieMapper, this._params);
 
   Future<PaginatedMovies> fetchPaginatedMovies({required MoviesRequest request}) async {
     final queryParams = _params.getMoviesRequestQueryParams(request: request);
