@@ -9,11 +9,11 @@ import 'package:movies/core/network/api_client.dart';
 import 'package:movies/core/network/api_client_dio_impl.dart';
 import 'package:movies/core/network/endpoints.dart';
 import 'package:movies/core/network/params.dart';
+import 'package:movies/core/router/router.dart';
 import 'package:movies/features/movies/data/repos/local_repo.dart';
 import 'package:movies/features/movies/data/repos/network_repo.dart';
 import 'package:movies/features/movies/domain/use_cases/movies_use_case.dart';
 import 'package:movies/features/movies/presentation/providers/movie_provider.dart';
-import 'package:movies/features/movies/presentation/screens/movies_screen.dart';
 import 'package:movies/resources/app_constants.dart';
 import 'package:movies/resources/app_strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,7 +52,9 @@ void main() async {
       overrides: [
         movieProvider.overrideWith(() => MovieProvider(moviesUseCase)),
       ],
-      child: const MaterialApp(home: MovieScreen()),
+      child: MaterialApp.router(
+        routerConfig: router,
+      ),
     ),
   );
 }
