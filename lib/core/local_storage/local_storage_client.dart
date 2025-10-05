@@ -1,7 +1,7 @@
 abstract class LocalStorageClient {
-  Future<bool> saveFavoriteMovies(String jsonString);
+  Future<bool> saveFavoriteMovies(List<String> list);
 
-  Future<String?> loadFavoriteMovies();
+  List<String> loadFavoriteMovies();
 
   Future<bool> removeFavoriteMovies();
 }
