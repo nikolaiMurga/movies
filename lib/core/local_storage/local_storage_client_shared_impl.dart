@@ -12,7 +12,7 @@ class LocalStorageClientSharedImpl implements LocalStorageClient {
 
   LocalStorageClientSharedImpl(this._pref);
 
-  // clear storage // todo renaming
+  // clear storage
   Future<bool> clearStorage() async {
     final isClear = await _pref.clear();
     return isClear;

@@ -11,7 +11,7 @@ class FavoritesUseCase {
   FavoritesUseCase( this._localRepo);
 
 
-  Future<bool> saveFavoriteMovies({required List<int> list}) async {
+  Future<bool> saveFavoriteMovies({required Set<int> list}) async {
     return _localRepo.saveFavoriteMovies(list: list);
   }
 

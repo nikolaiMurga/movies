@@ -29,7 +29,6 @@ void main() async {
       overrides: [
         localStorage.overrideWith((ref) => LocalStorageClientSharedImpl(prefs)),
         themeProvider.overrideWith((ref) => ThemeNotifier(initialTheme, prefs)),
-        favoritesProvider.overrideWith((ref) => FavoritesNotifier(prefs)),
       ],
       child: const MovieApp(),
     ),

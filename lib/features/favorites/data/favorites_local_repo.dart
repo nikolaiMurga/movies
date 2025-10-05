@@ -11,7 +11,7 @@ class FavoritesLocalRepo {
 
   FavoritesLocalRepo(this._localStorageClient);
 
-  Future<bool> saveFavoriteMovies({required List<int> list}) async {
+  Future<bool> saveFavoriteMovies({required Set<int> list}) async {
     final stringList = list.map((id) => id.toString()).toList();
     return _localStorageClient.saveFavoriteMovies(stringList);
   }

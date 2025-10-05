@@ -1,20 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:movies/features/favorites/domain/favorites_use_case.dart';
 
 final favoritesProvider = StateNotifierProvider<FavoritesNotifier, Set<int>>((ref) {
-  return FavoritesNotifier(SharedPreferences.getInstance() as SharedPreferences);
+  return FavoritesNotifier(ref.watch(favoritesUseCase));
 });
 
 class FavoritesNotifier extends StateNotifier<Set<int>> {
-  final SharedPreferences _pref;
+  final FavoritesUseCase _favoritesUseCase;
 
-  FavoritesNotifier(this._pref) : super({}) {
+  FavoritesNotifier(this._favoritesUseCase) : super({}) {
     _loadFavorites();
   }
 
   Future<void> _loadFavorites() async {
-    final favoritesList = _pref.getStringList('favorites') ?? [];
-    state = favoritesList.map((id) => int.parse(id)).toSet();
+    state = await _favoritesUseCase.loadFavoriteMovies();
   }
 
   Future<void> toggleFavorite(int id) async {
@@ -23,8 +22,7 @@ class FavoritesNotifier extends StateNotifier<Set<int>> {
     } else {
       state = {...state, id};
     }
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('favorites', state.map((id) => id.toString()).toList());
+    await _favoritesUseCase.saveFavoriteMovies(list: state);
   }
 
   bool isFavorite(int id) => state.contains(id);
