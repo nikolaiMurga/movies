@@ -20,8 +20,9 @@ class AppStrings {
   static const requestCancelled = 'Request cancelled';
   static const unknownError = 'Unknown error:';
 
-  // home screen
-  static const noSearchResults = 'No results';
+  // movies screen
   static const noErrorMessage = 'No error message';
   static const ok = 'ОК';
+  static const movies = 'Movies';
+  static const moviesNotFound = 'No movies found';
 }

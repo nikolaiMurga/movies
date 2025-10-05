@@ -1,9 +1,10 @@
+import 'package:movies/common/models/error_model.dart';
 import 'package:movies/features/movies/domain/models/movie.dart';
 
 class MovieState {
   final bool isLoading;
   final List<Movie>? movies;
-  final String? error;
+  final ErrorModel? error;
   final int currentPage;
   final int totalPages;
 
@@ -20,7 +21,7 @@ class MovieState {
   MovieState copyWith({
     bool? isLoading,
     List<Movie>? movies,
-    String? error,
+    ErrorModel? error,
     int? currentPage,
     int? totalPages,
   }) {
