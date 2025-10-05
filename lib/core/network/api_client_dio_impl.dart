@@ -9,45 +9,51 @@ class ApiClientDioImpl implements ApiClient {
   ApiClientDioImpl(this._dio);
 
   ErrorModel _mapDioException(DioException e) {
-    if (e.type == DioExceptionType.badResponse) {
-      final statusCode = e.response?.statusCode;
+    ErrorModel badResponseHandle() {
+      // from response
       final data = e.response?.data;
 
+      // from response with model
       if (data is Map<String, dynamic>) {
         try {
           return ErrorModel.fromJson(data);
         } catch (_) {
-          return ErrorModel(error: AppStrings.invalidResponse);
+          return ErrorModel(statusMessage: AppStrings.invalidResponse);
         }
       }
+      return ErrorModel(statusMessage: AppStrings.invalidResponse);
 
+      //manual
+      final statusCode = e.response?.statusCode;
       switch (statusCode) {
         case 400:
-          return ErrorModel(error: AppStrings.badRequest);
+          return ErrorModel(statusMessage: AppStrings.badRequest);
         case 401:
-          return ErrorModel(error: AppStrings.unauthorized);
+          return ErrorModel(statusMessage: AppStrings.unauthorized);
         case 403:
-          return ErrorModel(error: AppStrings.forbidden);
+          return ErrorModel(statusMessage: AppStrings.forbidden);
         case 404:
-          return ErrorModel(error: AppStrings.notFound);
+          return ErrorModel(statusMessage: AppStrings.notFound);
         case 500:
-          return ErrorModel(error: AppStrings.serverError);
+          return ErrorModel(statusMessage: AppStrings.serverError);
         default:
-          return ErrorModel(error: AppStrings.unknownError);
+          return ErrorModel(statusMessage: AppStrings.unknownError);
       }
     }
 
     switch (e.type) {
+      case DioExceptionType.badResponse:
+        return badResponseHandle();
       case DioExceptionType.connectionTimeout:
-        return ErrorModel(error: AppStrings.connectionTimeout);
+        return ErrorModel(statusMessage: AppStrings.connectionTimeout);
       case DioExceptionType.sendTimeout:
-        return ErrorModel(error: AppStrings.sendTimeout);
+        return ErrorModel(statusMessage: AppStrings.sendTimeout);
       case DioExceptionType.receiveTimeout:
-        return ErrorModel(error: AppStrings.receiveTimeout);
+        return ErrorModel(statusMessage: AppStrings.receiveTimeout);
       case DioExceptionType.cancel:
-        return ErrorModel(error: AppStrings.requestCancelled);
+        return ErrorModel(statusMessage: AppStrings.requestCancelled);
       default:
-        return ErrorModel(error: '${AppStrings.unknownError}: ${e.message}');
+        return ErrorModel(statusMessage: '${AppStrings.unknownError}: ${e.message}');
     }
   }
 

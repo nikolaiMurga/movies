@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movies/common/mixins/snack_bar_mixin.dart';
 import 'package:movies/features/movies/presentation/providers/movie_provider.dart';
 import 'package:movies/features/movies/presentation/widgets/empty_state_widget.dart';
 import 'package:movies/features/movies/presentation/widgets/movie_grid_item.dart';
@@ -12,7 +13,7 @@ class MovieScreen extends ConsumerStatefulWidget {
   MovieScreenState createState() => MovieScreenState();
 }
 
-class MovieScreenState extends ConsumerState<MovieScreen> {
+class MovieScreenState extends ConsumerState<MovieScreen> with SnackBarMixin {
   final ScrollController _scrollController = ScrollController();
   final String _query = 'star wars';
   int _currentPage = 1;
@@ -82,7 +83,13 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),
+        error: (err, stack) {
+          WidgetsBinding.instance.addPostFrameCallback((_) => showSnackBar(context, err.toString()));
+          return RefreshIndicator(
+            onRefresh: () async => _reloadList(),
+            child: ListView(children: const [EmptyStateWidget()]),
+          );
+        },
       ),
     );
   }
