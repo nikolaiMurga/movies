@@ -47,21 +47,21 @@ class ApiClientDioImpl implements ApiClient {
       return ErrorModel(statusMessage: AppStrings.invalidResponse);
 
       //manual
-      final statusCode = e.response?.statusCode;
-      switch (statusCode) {
-        case 400:
-          return ErrorModel(statusMessage: AppStrings.badRequest);
-        case 401:
-          return ErrorModel(statusMessage: AppStrings.unauthorized);
-        case 403:
-          return ErrorModel(statusMessage: AppStrings.forbidden);
-        case 404:
-          return ErrorModel(statusMessage: AppStrings.notFound);
-        case 500:
-          return ErrorModel(statusMessage: AppStrings.serverError);
-        default:
-          return ErrorModel(statusMessage: AppStrings.unknownError);
-      }
+      // final statusCode = e.response?.statusCode;
+      // switch (statusCode) {
+      //   case 400:
+      //     return ErrorModel(statusMessage: AppStrings.badRequest);
+      //   case 401:
+      //     return ErrorModel(statusMessage: AppStrings.unauthorized);
+      //   case 403:
+      //     return ErrorModel(statusMessage: AppStrings.forbidden);
+      //   case 404:
+      //     return ErrorModel(statusMessage: AppStrings.notFound);
+      //   case 500:
+      //     return ErrorModel(statusMessage: AppStrings.serverError);
+      //   default:
+      //     return ErrorModel(statusMessage: AppStrings.unknownError);
+      // }
     }
 
     switch (e.type) {
