@@ -26,7 +26,8 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
   }
 
   void fetchPage() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
+    final endOfPage = _scrollController.position.pixels == _scrollController.position.maxScrollExtent;
+    if (endOfPage) {
       final state = ref.read(movieProvider);
       if (state.value != null && !state.value!.isLoading && state.value!.hasMore) {
         _currentPage++;
@@ -59,7 +60,7 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           if (state.error != null) {
-            return Center(child: Text(state.error!, style: const TextStyle(color: Colors.red)));
+            return Center(child: Text(state.error!.error!, style: const TextStyle(color: Colors.red)));
           }
           if (state.movies == null || state.movies!.isEmpty) {
             return const Center(child: Text('No movies found'));
@@ -78,7 +79,7 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
               itemCount: state.movies!.length + (state.hasMore ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index == state.movies!.length && state.hasMore) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const SizedBox.shrink();
                 }
                 final movie = state.movies![index];
                 return MovieGridItem(movie: movie);

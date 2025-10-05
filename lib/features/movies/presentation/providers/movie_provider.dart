@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movies/common/models/error_model.dart';
 import 'package:movies/core/network/requests/currencies_request.dart';
 import 'package:movies/features/movies/domain/use_cases/movies_use_case.dart';
 import 'package:movies/features/movies/presentation/providers/movie_state.dart';
@@ -20,6 +21,7 @@ class MovieProvider extends AsyncNotifier<MovieState> {
   Future<void> fetchMovies(String query, {int page = 1}) async {
     if (page > 1 && state.value != null && !state.value!.hasMore) return;
 
+    // loading
     state = AsyncValue.data(MovieState(
       isLoading: true,
       movies: state.value?.movies ?? [],
@@ -28,10 +30,12 @@ class MovieProvider extends AsyncNotifier<MovieState> {
     ));
 
     try {
+      await Future.delayed(const Duration(milliseconds: 500));
       final request = MoviesRequest(page: page);
       final paginatedMovies = await _moviesUseCase.fetchCurrencies(request: request);
       final currentMovies = state.value?.movies ?? [];
 
+      // data
       state = AsyncValue.data(MovieState(
         isLoading: false,
         movies: [...currentMovies, ...paginatedMovies.moviesList],
@@ -39,11 +43,12 @@ class MovieProvider extends AsyncNotifier<MovieState> {
         currentPage: paginatedMovies.page,
         totalPages: paginatedMovies.totalPages,
       ));
-    } catch (e) {
+    } on ErrorModel catch (e) {
+      // error
       state = AsyncValue.data(MovieState(
         isLoading: false,
         movies: state.value?.movies ?? [],
-        error: 'Error: $e',
+        error: e,
         currentPage: page,
         totalPages: state.value?.totalPages ?? 1,
       ));
