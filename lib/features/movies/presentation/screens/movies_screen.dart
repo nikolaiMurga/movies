@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movies/features/movies/presentation/providers/movie_provider.dart';
 import 'package:movies/features/movies/presentation/widgets/movie_grid_item.dart';
+import 'package:movies/resources/app_strings.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
   const MovieScreen({super.key});
@@ -53,7 +54,7 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
     final movieState = ref.watch(movieProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Movies')),
+      appBar: AppBar(title: const Text(AppStrings.movies)),
       body: movieState.when(
         data: (state) {
           if (state.isLoading && state.movies == null) {
@@ -62,30 +63,32 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
           if (state.error != null) {
             return Center(child: Text(state.error!.error!, style: const TextStyle(color: Colors.red)));
           }
-          if (state.movies == null || state.movies!.isEmpty) {
+          if (state.movies != null && state.movies!.isEmpty) {
             return const Center(child: Text('No movies found'));
           }
-          return RefreshIndicator(
-            onRefresh: () async => _reloadList(),
-            child: GridView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(8.0),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-                childAspectRatio: 0.58,
+          if (state.movies != null && state.movies!.isNotEmpty) {
+            return RefreshIndicator(
+              onRefresh: () async => _reloadList(),
+              child: GridView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.all(8.0),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                  childAspectRatio: 0.58,
+                ),
+                itemCount: state.movies!.length + (state.hasMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index == state.movies!.length && state.hasMore) {
+                    return const SizedBox.shrink();
+                  }
+                  final movie = state.movies![index];
+                  return MovieGridItem(movie: movie);
+                },
               ),
-              itemCount: state.movies!.length + (state.hasMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == state.movies!.length && state.hasMore) {
-                  return const SizedBox.shrink();
-                }
-                final movie = state.movies![index];
-                return MovieGridItem(movie: movie);
-              },
-            ),
-          );
+            );
+          }
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),

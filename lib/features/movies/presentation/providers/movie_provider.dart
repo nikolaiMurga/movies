@@ -24,13 +24,13 @@ class MovieProvider extends AsyncNotifier<MovieState> {
     // loading
     state = AsyncValue.data(MovieState(
       isLoading: true,
-      movies: state.value?.movies ?? [],
+      movies: state.value?.movies,
       currentPage: page,
       totalPages: state.value?.totalPages ?? 1,
     ));
 
     try {
-      await Future.delayed(const Duration(milliseconds: 500));
+      // await Future.delayed(const Duration(milliseconds: 500));
       final request = MoviesRequest(page: page);
       final paginatedMovies = await _moviesUseCase.fetchCurrencies(request: request);
       final currentMovies = state.value?.movies ?? [];
@@ -58,7 +58,7 @@ class MovieProvider extends AsyncNotifier<MovieState> {
   void reset() {
     state = AsyncValue.data(MovieState(
       isLoading: false,
-      movies: [],
+      movies: null,
       error: null,
       currentPage: 1,
       totalPages: 1,
