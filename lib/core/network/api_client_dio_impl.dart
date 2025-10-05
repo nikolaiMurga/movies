@@ -1,12 +1,35 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movies/common/models/error_model.dart';
 import 'package:movies/core/network/api_client.dart';
+import 'package:movies/core/network/endpoints.dart';
+import 'package:movies/core/network/params.dart';
+import 'package:movies/resources/app_constants.dart';
 import 'package:movies/resources/app_strings.dart';
 
-class ApiClientDioImpl implements ApiClient {
-  final Dio _dio;
+final baseOptions = Provider<BaseOptions>((ref) {
+  return BaseOptions(
+    baseUrl: Endpoints.baseUrl,
+    headers: ref.watch(params).getHeaders(token: dotenv.env[AppStrings.apiToken]),
+    connectTimeout: AppConstants.connectTimeout,
+    receiveTimeout: AppConstants.receiveTimeout,
+    sendTimeout: AppConstants.sendTimeout,
+  );
+});
 
-  ApiClientDioImpl(this._dio);
+final dioProvider = Provider<Dio>((ref) {
+  return Dio(ref.watch(baseOptions));
+});
+
+final apiClient = Provider<ApiClient>((ref) {
+  return ApiClientDioImpl(ref.watch(dioProvider));
+});
+
+class ApiClientDioImpl implements ApiClient {
+  final Dio dio;
+
+  const ApiClientDioImpl(this.dio);
 
   ErrorModel _mapDioException(DioException e) {
     ErrorModel badResponseHandle() {
@@ -24,21 +47,21 @@ class ApiClientDioImpl implements ApiClient {
       return ErrorModel(statusMessage: AppStrings.invalidResponse);
 
       //manual
-      final statusCode = e.response?.statusCode;
-      switch (statusCode) {
-        case 400:
-          return ErrorModel(statusMessage: AppStrings.badRequest);
-        case 401:
-          return ErrorModel(statusMessage: AppStrings.unauthorized);
-        case 403:
-          return ErrorModel(statusMessage: AppStrings.forbidden);
-        case 404:
-          return ErrorModel(statusMessage: AppStrings.notFound);
-        case 500:
-          return ErrorModel(statusMessage: AppStrings.serverError);
-        default:
-          return ErrorModel(statusMessage: AppStrings.unknownError);
-      }
+      // final statusCode = e.response?.statusCode;
+      // switch (statusCode) {
+      //   case 400:
+      //     return ErrorModel(statusMessage: AppStrings.badRequest);
+      //   case 401:
+      //     return ErrorModel(statusMessage: AppStrings.unauthorized);
+      //   case 403:
+      //     return ErrorModel(statusMessage: AppStrings.forbidden);
+      //   case 404:
+      //     return ErrorModel(statusMessage: AppStrings.notFound);
+      //   case 500:
+      //     return ErrorModel(statusMessage: AppStrings.serverError);
+      //   default:
+      //     return ErrorModel(statusMessage: AppStrings.unknownError);
+      // }
     }
 
     switch (e.type) {
@@ -68,8 +91,7 @@ class ApiClientDioImpl implements ApiClient {
 
   // GET
   @override
-  Future<dynamic> get({required String endpoint, required Map<String, dynamic> queryParams}) async {
-    final resp = await _dioExceptionHandle(apiCall: _dio.get(endpoint, queryParameters: queryParams));
-    return resp.data;
+  Future<Response> get({required String endpoint, Map<String, dynamic>? queryParams}) async {
+    return _dioExceptionHandle(apiCall: dio.get(endpoint, queryParameters: queryParams));
   }
 }

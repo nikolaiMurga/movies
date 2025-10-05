@@ -1,15 +1,9 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movies/core/network/requests/currencies_request.dart';
 
+final params = Provider<Params>((ref) => Params());
+
 class Params {
-  static Params? _instance;
-
-  Params._privateConstructor();
-
-  factory Params() {
-    _instance ??= Params._privateConstructor();
-    return _instance!;
-  }
-
   // HEADERS
   Map<String, String> getHeaders({String? token, bool? data}) {
     if (token != null) {

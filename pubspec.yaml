@@ -35,6 +35,8 @@ dependencies:
   shared_preferences: 2.5.3
   flutter_riverpod:
   hooks_riverpod:
+  go_router: 14.3.0
+  intl:
 
 
   # The following adds the Cupertino Icons font to your application.
