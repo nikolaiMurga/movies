@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movies/features/movies/presentation/providers/movie_provider.dart';
+import 'package:movies/features/movies/presentation/widgets/empty_state_widget.dart';
 import 'package:movies/features/movies/presentation/widgets/movie_grid_item.dart';
 import 'package:movies/resources/app_strings.dart';
 
@@ -64,7 +65,10 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
             return Center(child: Text(state.error!.error!, style: const TextStyle(color: Colors.red)));
           }
           if (state.movies != null && state.movies!.isEmpty) {
-            return const Center(child: Text('No movies found'));
+            return RefreshIndicator(
+              onRefresh: () async => _reloadList(),
+              child: ListView(children: const [EmptyStateWidget()]),
+            );
           }
           if (state.movies != null && state.movies!.isNotEmpty) {
             return RefreshIndicator(

@@ -21,8 +21,8 @@ class AppStrings {
   static const unknownError = 'Unknown error:';
 
   // movies screen
-  static const noSearchResults = 'No results';
   static const noErrorMessage = 'No error message';
   static const ok = 'ОК';
   static const movies = 'Movies';
+  static const moviesNotFound = 'No movies found';
 }
