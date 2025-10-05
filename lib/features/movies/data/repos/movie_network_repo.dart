@@ -17,7 +17,7 @@ class MovieNetworkRepo {
 
   Future<PaginatedMovies> fetchPaginatedMovies({required MoviesRequest request}) async {
     final queryParams = _params.getMoviesRequestQueryParams(request: request);
-    final data = await _apiClient.get(endpoint: Endpoints.fetchTopRatedMovies, queryParams: queryParams);
+    final data = await _apiClient.get(endpoint: Endpoints.topRatedMovies, queryParams: queryParams);
     final movResp = MoviesResponse.fromJson(data);
     final dtoList = movResp.dtoList;
     final moviesList = <Movie>[];
