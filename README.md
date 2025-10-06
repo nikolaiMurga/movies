@@ -1,6 +1,9 @@
 # movies
 
 Test task demo project
+Status: WIP
+Stack: flutter_riverpod, dio, go_router
+Architecture: Feature first
 
 REST API https://developer.themoviedb.org/docs/getting-started
 
