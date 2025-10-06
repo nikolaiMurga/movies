@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movies/common/widgets/movie_image.dart';
 import 'package:movies/features/favorites/presentation/favorites_provider.dart';
 import 'package:movies/features/movies/domain/models/movie.dart';
 
@@ -22,14 +23,7 @@ class MovieGridItem extends ConsumerWidget {
           Stack(
             alignment: Alignment.topRight,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  movie.posterPath,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.movie, size: 50),
-                ),
-              ),
+              MovieImage(imageUrl: movie.posterPath),
               IconButton(
                 onPressed: () => favoritesNotifier.toggleFavorite(movie.id),
                 icon: Icon(

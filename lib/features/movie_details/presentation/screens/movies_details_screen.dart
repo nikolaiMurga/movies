@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movies/common/widgets/movie_image.dart';
 import 'package:movies/features/favorites/presentation/favorites_provider.dart';
 import 'package:movies/features/movie_details/presentation/providers/movie_details_provider.dart';
 import 'package:movies/resources/app_strings.dart';
@@ -25,19 +26,9 @@ class MovieDetailsScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Stack(
+                  alignment: Alignment.topRight,
                   children: [
-                    SizedBox(
-                      width: 220,
-                      height: 315,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          details.posterPath,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => const Icon(Icons.movie, size: 50),
-                        ),
-                      ),
-                    ),
+                    MovieImage(imageUrl: details.posterPath),
                     IconButton(
                       onPressed: () => favoritesNotifier.toggleFavorite(details.id),
                       icon: Icon(
