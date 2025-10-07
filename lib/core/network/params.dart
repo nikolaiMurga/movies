@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movies/core/network/requests/currencies_request.dart';
+import 'package:movies/features/movies/data/request/movies_request.dart';
 
 final params = Provider<Params>((ref) => Params());
 

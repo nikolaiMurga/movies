@@ -26,16 +26,15 @@ class MovieScreenState extends ConsumerState<MovieScreen> with SnackBarMixin {
 
   @override
   void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(movieProvider.notifier).fetchMovies(page: _currentPage);
-    });
     _scrollController.addListener(fetchPage);
+    super.initState();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
   }
 

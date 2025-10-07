@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movies/common/logging_service.dart';
+import 'package:movies/core/log_service/log_service.dart';
 import 'package:movies/core/local_storage/local_storage_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
