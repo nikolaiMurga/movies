@@ -4,7 +4,7 @@ Test task demo project
 
 Status: WIP
 
-Stack: flutter_riverpod, dio, go_router
+Stack: flutter_riverpod, dio, go_router, shared
 
 Architecture: Feature first
 
