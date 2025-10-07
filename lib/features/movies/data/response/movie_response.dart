@@ -1,4 +1,4 @@
-import 'package:movies/core/network/dto/movie_dto.dart';
+import 'package:movies/features/movies/data/dto/movie_dto.dart';
 
 class MoviesResponse {
   final int page;
