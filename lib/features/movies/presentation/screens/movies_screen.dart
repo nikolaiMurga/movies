@@ -36,6 +36,8 @@ class MovieScreenState extends ConsumerState<MovieScreen> with SnackBarMixin {
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
   }
 
