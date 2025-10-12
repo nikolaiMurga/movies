@@ -2,15 +2,23 @@
 
 Test task demo project
 
-## Getting Started
+Status: WIP
 
-This project is a starting point for a Flutter application.
+Stack: flutter_riverpod, dio, go_router, shared
 
-A few resources to get you started if this is your first Flutter project:
+Architecture: Feature first
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+REST API https://developer.themoviedb.org/docs/getting-started
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+To run the project, you should:
+
+1. register on the resource by link REST API.
+2. get an Api Key.
+3. create a file .env in root of your project.
+4. put your Api Key to this file by key API_TOKEN=
+
+https://github.com/user-attachments/assets/41a59106-1331-495a-b979-f483df616381
+
+
+
+
