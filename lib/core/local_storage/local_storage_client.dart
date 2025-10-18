@@ -4,4 +4,8 @@ abstract class LocalStorageClient {
   List<String> loadFavoriteMovies();
 
   Future<bool> removeFavoriteMovies();
+
+  Future<bool> saveTheme(String themeString);
+
+  String loadTheme();
 }

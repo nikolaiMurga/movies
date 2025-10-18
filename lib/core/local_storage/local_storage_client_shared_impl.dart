@@ -41,4 +41,17 @@ class LocalStorageClientSharedImpl implements LocalStorageClient {
     LogService.addLog('removeFavoriteMovies succeed is $isRemoved');
     return isRemoved;
   }
+
+  final _themeKey = 'theme_key';
+
+  @override
+  Future<bool> saveTheme(String themeString) async {
+    final isSaved = await _pref.setString(_themeKey, themeString);
+    return isSaved;
+  }
+
+  @override
+  String loadTheme() {
+    return _pref.getString(_themeKey) ?? 'system';
+  }
 }
