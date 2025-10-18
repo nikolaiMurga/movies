@@ -13,7 +13,6 @@ final GoRouter router = GoRouter(
       path: '/movie/:id',
       builder: (context, state) {
         final idString = state.pathParameters['id'];
-
         try {
           if (idString == null) {
             LogService.addLog('movie details redirect failed. idString = $idString');

@@ -18,13 +18,9 @@ final baseOptions = Provider<BaseOptions>((ref) {
   );
 });
 
-final dioProvider = Provider<Dio>((ref) {
-  return Dio(ref.watch(baseOptions));
-});
+final dioProvider = Provider<Dio>((ref) => Dio(ref.watch(baseOptions)));
 
-final apiClient = Provider<ApiClient>((ref) {
-  return ApiClientDioImpl(ref.watch(dioProvider));
-});
+final apiClient = Provider<ApiClient>((ref) => ApiClientDioImpl(ref.watch(dioProvider)));
 
 class ApiClientDioImpl implements ApiClient {
   final Dio dio;
